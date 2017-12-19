@@ -1,38 +1,28 @@
 package com.javasampleapproach.marshalling.config;
 
-import org.springframework.context.ConfigurableApplicationContext;
+import com.javasampleapproach.marshalling.model.Sentence;
+import com.javasampleapproach.marshalling.model.Text;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.oxm.castor.CastorMarshaller;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
-import com.javasampleapproach.marshalling.csvconvert.CsvConverter;
-import com.javasampleapproach.marshalling.xmlconvert.XmlConverter;
+import java.util.HashMap;
 
 @Configuration
 public class AppConfig {
-		
-	@Bean 
-	XmlConverter xmlConverter(){
-		XmlConverter xmlConverter = new XmlConverter();
-		xmlConverter.setMarshaller(castorMarshaller());
-		xmlConverter.setUnmarshaller(castorMarshaller());
-		return xmlConverter;
-	}
-	
-	@Bean
-	public CastorMarshaller castorMarshaller(){
-		CastorMarshaller castorMarshaller = new CastorMarshaller();
-		Resource resource = new ClassPathResource("mapping.xml");
-		castorMarshaller.setMappingLocation(resource);
-		return castorMarshaller;
-	}
-	
-	@Bean
-	CsvConverter csvConverter() {
-		CsvConverter csvConverter = new CsvConverter();
-		
-		return csvConverter;
-	}
+
+    @Bean
+    public Jaxb2Marshaller makeMarshaller() {
+        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+        marshaller.setClassesToBeBound(new Class[]{
+                Sentence.class,
+                Text.class
+        });
+        marshaller.setMarshallerProperties(new HashMap<String, Object>() {{
+            put(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        }});
+
+        return marshaller;
+    }
+
 }

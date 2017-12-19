@@ -1,53 +1,40 @@
 package com.javasampleapproach.marshalling;
 
-import java.text.BreakIterator;
-import java.util.ArrayList;
-
-import javax.annotation.Resource;
-
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import com.javasampleapproach.marshalling.config.AppConfig;
-import com.javasampleapproach.marshalling.csvconvert.CsvConverter;
-import com.javasampleapproach.marshalling.model.Sentence;
+import com.javasampleapproach.marshalling.converter.CsvConverter;
+import com.javasampleapproach.marshalling.converter.XmlConverter;
 import com.javasampleapproach.marshalling.model.Text;
 import com.javasampleapproach.marshalling.service.DataProvider;
 import com.javasampleapproach.marshalling.service.DataProvider.DataProviderListener;
-import com.javasampleapproach.marshalling.xmlconvert.XmlConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringBootMarshallingApplication implements CommandLineRunner, DataProviderListener{
+public class SpringBootMarshallingApplication implements CommandLineRunner, DataProviderListener {
 
-	@Resource
-	XmlConverter xmlConverter;
-	
-	@Resource
-	CsvConverter csvConverter;
-	
-	final String XMLFILE = "small.xml";
-	final String CSVFILE = "small.csv";
-	private Text text;
-	
-	public static void main(String[] args) {
-		SpringApplication.run(SpringBootMarshallingApplication.class, args);
-	}
+    @Autowired
+    private XmlConverter xmlConverter;
+    @Autowired
+    private CsvConverter csvConverter;
 
-	@Override
-	public void run(String... args) throws Exception {
-		new DataProvider(this).execute("small.in");
-		xmlConverter.convertFromObjectToXML(text, XMLFILE);
-		csvConverter.convertFromObjectToCSV(text, CSVFILE);
-	}
+    final String XMLFILE = "small.xml";
+    final String CSVFILE = "small.csv";
+    private Text text;
 
-	@Override
-	public void onDataLoaded(Text result) {
-		this.text = result;	
-	}
-	
-	
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBootMarshallingApplication.class, args);
+    }
+
+    public void run(String... args) throws Exception {
+        new DataProvider(this).execute("small.in");
+        xmlConverter.convertFromObjectToXML(text, XMLFILE);
+        csvConverter.convertFromObjectToCSV(text, CSVFILE);
+    }
+
+    public void onDataLoaded(Text result) {
+        this.text = result;
+    }
+
+
 }

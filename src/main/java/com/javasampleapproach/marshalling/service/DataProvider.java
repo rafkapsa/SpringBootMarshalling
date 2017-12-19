@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -112,7 +113,7 @@ public class DataProvider {
 	}
 
 	private static boolean hasAbbreviation(String sentence) {
-		if (sentence == null || sentence.isEmpty()) {
+		if (StringUtils.isEmpty(sentence)) {
 			return false;
 		}
 		for (String w : ABBREVIATIONS) {
