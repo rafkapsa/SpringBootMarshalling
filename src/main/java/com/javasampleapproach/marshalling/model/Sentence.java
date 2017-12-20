@@ -1,20 +1,23 @@
 package com.javasampleapproach.marshalling.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
-public class Sentence {
-	
-	private List<String> words = new ArrayList<String>();
+public class Sentence implements Serializable {
 
-	public List<String> getWords() {
-		return words;
-	}
+    private List<String> words;
 
-	public void setWords(List<String> words) {
-		this.words = words;
-	}
-	
+    public Sentence() {
+        words = new ArrayList<String>();
+    }
+
+    public List<String> getWords() {
+        return words;
+    }
+
+    public void setWords(List<String> words) {
+        this.words = words;
+    }
 }

@@ -21,7 +21,7 @@ import com.javasampleapproach.marshalling.model.Text;
 
 public class DataProvider {
 
-	private static final String[] ABBREVIATIONS = { "Dr.", "Prof.", "Mr.", "Mrs.", "Ms.", "Jr.", "Ph.D." };
+	private static final String[] ABBREVIATIONS = { "Dr.", "Prof.", "Mr.", "Mrs.", "Ms.", "Jr."};
 
 	private DataProviderListener listener;
 
@@ -30,61 +30,28 @@ public class DataProvider {
 	}
 
 	public void execute(String file) throws IOException {
-
+		List<String> sentences = new ArrayList<String>();
 		String document = "";
 
 		// Loading data from file
 		Resource resource = new ClassPathResource(file);
 		InputStream in = resource.getInputStream();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		
 		while (reader.ready()) {
 			String line = reader.readLine();
-			// if (line.trim().isEmpty()) {
-			// paragraphs.add(paragraph);
-			// paragraph = "";
-			// }
-			document += line;
+			document+= line;	
 		}
 		reader.close();
+		
+		//Getting all sentences from file
+		sentences.addAll(getSentences(document));
 
-		listener.onDataLoaded(getTextObject(getSentences(document)));
+		//Create Text object based on sentences list and transfer it to onDataLoaded function
+		listener.onDataLoaded(getTextObject(sentences));
 	}
-
-	private Text getTextObject(List<String> sentencesString) {
-		Text text = new Text();
-		List<Sentence> sentencesList = new ArrayList<Sentence>();
-
-		for (String s : sentencesString) {
-			sentencesList.add(getSentenceObject(s));
-		}
-		text.setSentences(sentencesList);
-		return text;
-	}
-
-	private Sentence getSentenceObject(String sentence) {
-
-		// Initialize list of words and Word objects
-		List<String> words = new ArrayList<String>();
-
-		// Splitting sentence to words using StringTokenizer Class
-		StringTokenizer st = new StringTokenizer(sentence, " \t\n\r\f,.:;?![]-()");
-
-		while (st.hasMoreTokens()) {
-			words.add(st.nextToken());
-		}
-		//
-		// Sorting list of words using Collator Class
-		Collator collator = Collator.getInstance(Locale.ENGLISH);
-		Collections.sort(words, collator);
-
-		// Create Sentence Object
-		Sentence sentenceObject = new Sentence();
-		sentenceObject.setWords(words);
-
-		return sentenceObject;
-	}
-
-	public static List<String> getSentences(String document) {
+	
+	private List<String> getSentences(String document) {
 
 		// Initialize list of sentences as a String Object
 		List<String> sentenceList = new ArrayList<String>();
@@ -111,7 +78,7 @@ public class DataProvider {
 		return sentenceList;
 	}
 
-	private static boolean hasAbbreviation(String sentence) {
+	private boolean hasAbbreviation(String sentence) {
 		if (sentence == null || sentence.isEmpty()) {
 			return false;
 		}
@@ -122,6 +89,68 @@ public class DataProvider {
 		}
 		return false;
 	}
+
+	private Text getTextObject(List<String> sentencesString) {
+		Text text = new Text();
+		List<Sentence> sentencesList = new ArrayList<Sentence>();
+
+		for (String s : sentencesString) {
+			sentencesList.add(getSentenceObject(s));
+		}
+		text.setSentences(sentencesList);
+		return text;
+	}
+
+	private Sentence getSentenceObject(String sentence) {
+
+		// Initialize list of words and Word objects
+		List<String> words = new ArrayList<String>();
+
+		// Splitting sentence to words using StringTokenizer Class
+		StringTokenizer st = new StringTokenizer(sentence, " \t\n\r\f,.:;?![]-()");
+
+		while (st.hasMoreTokens()) {
+
+			String word = st.nextToken();
+			switch (word) {
+			case "Mr":
+				words.add(word += ".");
+				break;
+			case "Dr":
+				words.add(word += ".");
+				break;
+			case "Prof":
+				words.add(word += ".");
+				break;
+			case "Mrs":
+				words.add(word += ".");
+				break;
+			case "Ms":
+				words.add(word += ".");
+				break;
+			case "Jr":
+				words.add(word += ".");
+				break;
+
+			default:
+				words.add(word);
+				break;
+			}
+		}
+		
+		//
+		// Sorting list of words using Collator Class
+		Collator collator = Collator.getInstance(Locale.ENGLISH);
+		Collections.sort(words, collator);
+
+		// Create Sentence Object
+		Sentence sentenceObject = new Sentence();
+		sentenceObject.setWords(words);
+
+		return sentenceObject;
+	}
+
+
 
 	public interface DataProviderListener {
 		void onDataLoaded(Text result);
