@@ -22,8 +22,6 @@ public class SpringBootMarshallingApplication implements CommandLineRunner, Data
     final String XML_FILE_SMALL = "small.xml";
     final String CSV_FILE_SMALL = "small.csv";
     
-    final String XML_FILE_LARGE = "large.xml";
-    final String CSV_FILE_LARGE = "large.csv";
     private Text text;
 
     public static void main(String[] args) {
@@ -31,9 +29,10 @@ public class SpringBootMarshallingApplication implements CommandLineRunner, Data
     }
 
     public void run(String... args) throws Exception {
+    	
         new DataProvider(this).execute("small.in");
-        xmlConverter.convertFromObjectToXML(text, XML_FILE_LARGE);
-        csvConverter.convertFromObjectToCSV(text, CSV_FILE_LARGE);
+        xmlConverter.convertFromObjectToXML(text, XML_FILE_SMALL);
+        csvConverter.convertFromObjectToCSV(text, CSV_FILE_SMALL);
     }
 
     public void onDataLoaded(Text result) {

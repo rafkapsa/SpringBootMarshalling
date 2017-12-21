@@ -1,9 +1,13 @@
 package com.javasampleapproach.marshalling.converter;
 
 import java.io.Closeable;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringWriter;
 
+import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +29,7 @@ public class XmlConverter {
         try {
             os = new FileOutputStream(filepath);
             marshaller.marshal(object, new StreamResult(os));
-        } catch (IOException | XmlMappingException ex) {
+        } catch (XmlMappingException | IOException ex) {
             throw new WriterToFileException(ex.getMessage(), ex);
         } finally {
             if (os != null) {

@@ -5,6 +5,7 @@ import java.io.Closeable;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -24,7 +25,8 @@ public class CsvConverter {
         FileOutputStream os = null;
         try {
             os = new FileOutputStream(filepath);
-            os.write(getCsvString(text).getBytes(StandardCharsets.UTF_8));
+            String csvBody = getCsvString(text);
+            os.write(csvBody.getBytes(StandardCharsets.UTF_8));
         } catch (IOException ex) {
             throw new WriterToFileException(ex.getMessage(), ex);
         } finally {

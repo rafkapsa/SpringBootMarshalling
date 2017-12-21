@@ -31,19 +31,22 @@ public class DataProvider {
 
 	public void execute(String file) throws IOException {
 		List<String> sentences = new ArrayList<String>();
+		
 		String document = "";
 
 		// Loading data from file
 		Resource resource = new ClassPathResource(file);
 		InputStream in = resource.getInputStream();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		
 		while (reader.ready()) {
 			String line = reader.readLine();
-			document+= line;	
+			document+= line;
 		}
-		reader.close();
 		
+		System.out.println(document);
+		reader.close();
+
 		//Getting all sentences from file
 		sentences.addAll(getSentences(document));
 
